@@ -17,5 +17,5 @@ before_script:
 
 after_script:
   - ./gradlew kotlinJacocoTestReport
-  - ./cc-test-reporter format-coverage -d -t jacoco jacoco.xml
+  - ./cc-test-reporter format-coverage -d -t jacoco /jacoco.xml
   - ./cc-test-reporter upload-coverage -d
