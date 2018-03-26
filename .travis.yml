@@ -1,0 +1,20 @@
+language: java
+jdk:
+  - oraclejdk8
+
+notifications:
+  email:
+    - dupontgu@gmail.com
+
+env:
+  global:
+    - CC_TEST_REPORTER_ID=63beb0d1dbc7b4f536f1e980cc768d11c32c0e5fa235861e7cf8c2cbfd2e52e2
+
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
+after_script:
+  - ./cc-test-reporter format-coverage -d -t jacoco build/jacoco.xml
+  - ./cc-test-reporter upload-coverage -d
