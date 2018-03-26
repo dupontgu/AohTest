@@ -1,11 +1,17 @@
 buildscript {
     ext.kotlin_version = '1.2.21'
+    ext.dokka_version = '0.9.14'
 
     repositories {
         mavenCentral()
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
     }
 }
 
@@ -38,6 +44,29 @@ task jacocoFix(type: Copy) {
         fileName.replace("jacocoRaw.xml", "jacoco.xml")
     }
     filter { line -> line.replaceAll("io/", "src/main/kotlin/io/") }
+}
+
+apply plugin: 'org.jetbrains.dokka'
+
+task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
+    outputFormat = 'javadoc'
+    outputDirectory = javadoc.destinationDir
+    inputs.dir 'src/main/kotlin'
+}
+
+task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
 }
 
 repositories {
